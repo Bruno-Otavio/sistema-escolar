@@ -1,0 +1,151 @@
+{
+    "professores": [
+        {
+            "id": 1,
+            "nome": "Emanuel Rego de Barros",
+            "email": "emanual@gmail.com",
+            "senha": "123456"
+        },
+        {
+            "id": 2,
+            "nome": "Maria da Silva",
+            "email": "maria@gmail.com",
+            "senha": "123456"
+        },
+        {
+            "id": 3,
+            "nome": "João da Silva",
+            "email": "joao@gmail.com",
+            "senha": "123456"
+        }
+    ],
+    "turmas": [
+        {
+            "id": 1,
+            "nome": "1DES",
+            "professorId": 1
+        },
+        {
+            "id": 2,
+            "nome": "2DES",
+            "professorId": 1
+        },
+        {
+            "id": 3,
+            "nome": "3DES",
+            "professorId": 1
+        },
+        {
+            "id": 4,
+            "nome": "1EA",
+            "professorId": 2
+        },
+        {
+            "id": 5,
+            "nome": "2EA",
+            "professorId": 2
+        },
+        {
+            "id": 6,
+            "nome": "3EA",
+            "professorId": 2
+        },
+        {
+            "id": 7,
+            "nome": "1MECB",
+            "professorId": 3
+        },
+        {
+            "id": 8,
+            "nome": "2MECB",
+            "professorId": 3
+        },
+        {
+            "id": 9,
+            "nome": "3MECB",
+            "professorId": 3
+        }
+    ],
+    "atividades": [
+        {
+            "descricao": "Atividade 1 Fluxograma do processo de diferenciar triângulos",
+            "turmaId": 1
+        },
+        {
+            "descricao": "Atividade 2 Imterface HTML de um currículo",
+            "turmaId": 1
+        },
+        {
+            "descricao": "Atividade 3 Estiliização CSS de um currículo",
+            "turmaId": 1
+        },
+        {
+            "descricao": "Atividade 1 Código de um jogo de adivinhação",
+            "turmaId": 2
+        },
+        {
+            "descricao": "Atividade 1 DER do Banco de dados de uma locadora de filmes",
+            "turmaId": 2
+        },
+        {
+            "descricao": "Atividade 1 Análse de risco com matriz SWOT",
+            "turmaId": 3
+        },
+        {
+            "descricao": "Atividade 2 Códificar um programa de Ordens de Servoço",
+            "turmaId": 3
+        },
+        {
+            "descricao": "Atividade 1 Identificar componentes eletrônicos",
+            "turmaId": 4
+        },
+        {
+            "descricao": "Atividade 2 Tipos de Correntes elétricas",
+            "turmaId": 4
+        },
+        {
+            "descricao": "Atividade 1 Algoritmo de ordenação de vetores",
+            "turmaId": 5
+        },
+        {
+            "descricao": "Atividade 2 Protótipos com a Protoboard",
+            "turmaId": 5
+        },
+        {
+            "descricao": "Atividade 1 Simulação com o software Proteus",
+            "turmaId": 6
+        },
+        {
+            "descricao": "Atividade 2 Protótipo com Thinkercad",
+            "turmaId": 6
+        },
+        {
+            "descricao": "Atividade 1 Tipos de materiáis metálicos",
+            "turmaId": 7
+        },
+        {
+            "descricao": "Atividade 2 Cálculos de resistência de materiais",
+            "turmaId": 7
+        },
+        {
+            "descricao": "Atividade 1 Lubricantes e suas aplicações",
+            "turmaId": 8
+        },
+        {
+            "descricao": "Atividade 2 Manutenção de motores elétricos",
+            "turmaId": 8
+        },
+        {
+            "descricao": "Atividade 1 Relatório de ensaio de tração",
+            "turmaId": 9
+        },
+        {
+            "descricao": "Atividade 2 Relatório de ensaio de compressão",
+            "turmaId": 9
+        },
+        {
+            "descricao": "Atividade 3 Interpretação de gráficos de ensaios",
+            "turmaId": 9
+        }
+    ]
+}
