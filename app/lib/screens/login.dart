@@ -1,4 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sistema_escolar/main.dart';
+import 'package:sistema_escolar/model/user.dart';
+import 'package:sistema_escolar/provider/user_provider.dart';
+import 'package:sistema_escolar/services/user_service.dart';
+import 'package:sistema_escolar/widget/button.dart';
+import 'package:sistema_escolar/widget/text_input.dart';
+import 'package:sistema_escolar/widget/text_input_toggle.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -13,6 +21,30 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  void _login() async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        User user = await UserService.login(
+          email: _emailController.text,
+          password: _passwordController.text,
+        );
+
+        Provider.of<UserProvider>(context, listen: false).user = user;
+
+        navigatorKey.currentState?.pushReplacementNamed('/home');
+      } catch (e) {
+        print(e);
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _emailController.text = 'emanual@gmail.com';
+    _passwordController.text = '123456';
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -26,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Form(
         key: _formKey,
         child: Padding(
-          padding: const EdgeInsets.all(25),
+          padding: const EdgeInsets.all(15),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -40,39 +72,32 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 50),
               Column(
                 children: [
-                  Container(
-                    decoration: ShapeDecoration(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      shadows: [
-                        BoxShadow(
-                          offset: const Offset(0, 4),
-                          blurRadius: 4,
-                          color: Theme.of(context).colorScheme.secondary.withOpacity(0.5),
-                        ),
-                      ]
-                    ),
-                    child: TextFormField(
-                      validator: (value) => null,
-                      controller: _emailController,
-                      decoration: InputDecoration(
-                        hintText: 'Email',
-                        hintStyle: TextStyle(
-                          fontSize: 16,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .primary
-                              .withOpacity(0.75),
-                        ),
-                        filled: true,
-                        fillColor: Theme.of(context).colorScheme.onSurface,
-                        contentPadding: const EdgeInsets.all(15),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                    ),
+                  TextInput(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor, insira seu email.';
+                      }
+                      return null;
+                    },
+                    controller: _emailController,
+                    hintText: 'Email',
+                    margin: const EdgeInsets.symmetric(vertical: 5),
+                  ),
+                  TextInputToggle(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor, insira sua senha.';
+                      }
+                      return null;
+                    },
+                    controller: _passwordController,
+                    hintText: 'Senha',
+                    margin: const EdgeInsets.symmetric(vertical: 5),
+                  ),
+                  Button(
+                    onPressed: _login,
+                    text: 'Entrar',
+                    margin: const EdgeInsets.symmetric(vertical: 5),
                   ),
                 ],
               ),

@@ -7,7 +7,6 @@ class LightTheme {
     scaffoldBackgroundColor: const Color(0xFFedf2f4),
     appBarTheme: const AppBarTheme(
       backgroundColor: Color(0xFFd90429),
-      centerTitle: true,
       titleTextStyle: TextStyle(
         fontFamily: 'Poppins',
         fontSize: 20,
