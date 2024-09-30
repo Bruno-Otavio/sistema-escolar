@@ -1,14 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:sistema_escolar/main.dart';
 import 'package:sistema_escolar/model/turma.dart';
+import 'package:sistema_escolar/screens/activities.dart';
+import 'package:sistema_escolar/services/turma_service.dart';
 import 'package:sistema_escolar/widget/small_button.dart';
 
 class TurmaWidget extends StatelessWidget {
   const TurmaWidget({
     super.key,
     required this.turma,
+    required this.refresh,
   });
 
   final Turma turma;
+  final Function()? refresh;
+
+  void _openActivities() {
+    navigatorKey.currentState?.push(
+      MaterialPageRoute(builder: (context) => ActivitiesScreen(turma: turma)),
+    );
+  }
+
+  void _removeTurma() async {
+    try {
+      await TurmaService.removeTurma(turma.id);
+      refresh!();
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +41,18 @@ class TurmaWidget extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
+          shadows: [
+            BoxShadow(
+              offset: const Offset(0, 2),
+              blurRadius: 4,
+              color: Theme.of(context).colorScheme.secondary.withOpacity(0.5),
+            ),
+            BoxShadow(
+              offset: const Offset(0, -2),
+              blurRadius: 4,
+              color: Theme.of(context).colorScheme.secondary.withOpacity(0.5),
+            ),
+          ],
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -35,13 +67,6 @@ class TurmaWidget extends StatelessWidget {
                     topRight: Radius.circular(10),
                   ),
                 ),
-                shadows: [
-                  BoxShadow(
-                    offset: const Offset(0, 4),
-                    blurRadius: 4,
-                    color: Theme.of(context).colorScheme.secondary.withOpacity(0.5),
-                  ),
-                ],
               ),
               width: double.infinity,
               child: Column(
@@ -53,7 +78,7 @@ class TurmaWidget extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    turma.id,
+                    turma.escola,
                     style: Theme.of(context).textTheme.displaySmall,
                   ),
                 ],
@@ -61,25 +86,27 @@ class TurmaWidget extends StatelessWidget {
             ),
             Container(
               padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-              decoration: const ShapeDecoration(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
+              decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(10),
                     bottomRight: Radius.circular(10),
                   ),
-                ),
-              ),
+                  border: Border(
+                      top: BorderSide(
+                    width: 1,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ))),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   SmallButton(
-                    onPressed: () {},
+                    onPressed: _removeTurma,
                     text: 'Excluir',
                     color: Theme.of(context).colorScheme.primary,
                   ),
                   const SizedBox(width: 10),
                   SmallButton(
-                    onPressed: () {},
+                    onPressed: _openActivities,
                     text: 'Visualizar',
                     color: Theme.of(context).colorScheme.tertiary,
                   ),

@@ -31,7 +31,11 @@ class LightTheme {
       headlineMedium: TextStyle(
         fontSize: 15,
         fontWeight: FontWeight.w700,
-        color: Color(0xFFedf2f4),
+        color: Color(0xFF2b2d42),
+      ),
+      headlineSmall: TextStyle(
+        fontSize: 14,
+        color: Color(0xFF2b2d42),
       ),
       displaySmall: TextStyle(
         fontSize: 12,
