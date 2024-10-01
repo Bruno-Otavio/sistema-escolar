@@ -108,7 +108,7 @@
     },
     {
       "descricao": "Atividade 2 Códificar um programa de Ordens de Servoço",
-      "turmaId": 3,
+      "turmaId": "3",
       "id": "e999"
     },
     {
@@ -143,37 +143,37 @@
     },
     {
       "descricao": "Atividade 1 Tipos de materiáis metálicos",
-      "turmaId": 7,
+      "turmaId": "7",
       "id": "9518"
     },
     {
       "descricao": "Atividade 2 Cálculos de resistência de materiais",
-      "turmaId": 7,
+      "turmaId": "7",
       "id": "a6f9"
     },
     {
       "descricao": "Atividade 1 Lubricantes e suas aplicações",
-      "turmaId": 8,
+      "turmaId": "8",
       "id": "658b"
     },
     {
       "descricao": "Atividade 2 Manutenção de motores elétricos",
-      "turmaId": 8,
+      "turmaId": "8",
       "id": "9801"
     },
     {
       "descricao": "Atividade 1 Relatório de ensaio de tração",
-      "turmaId": 9,
+      "turmaId": "9",
       "id": "8efa"
     },
     {
       "descricao": "Atividade 2 Relatório de ensaio de compressão",
-      "turmaId": 9,
+      "turmaId": "9",
       "id": "a999"
     },
     {
       "descricao": "Atividade 3 Interpretação de gráficos de ensaios",
-      "turmaId": 9,
+      "turmaId": "9",
       "id": "db29"
     }
   ]
