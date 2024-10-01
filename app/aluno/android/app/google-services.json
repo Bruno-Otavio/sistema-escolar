@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "311666309461",
+    "project_id": "sistema-escolar-28dfc",
+    "storage_bucket": "sistema-escolar-28dfc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:311666309461:android:178689bd1876d8f75897dc",
+        "android_client_info": {
+          "package_name": "com.example.sistema_escolar_aluno"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBghsYl-MojFBmiEZJhspCe0LdZ_5pvhEo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
