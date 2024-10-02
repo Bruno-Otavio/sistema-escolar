@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:sistema_escolar_aluno/screens/login.dart';
+import 'package:sistema_escolar_aluno/theme/light_theme.dart';
 import 'firebase_options.dart';
+
+final navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,12 +19,14 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: LightTheme().theme,
+      navigatorKey: navigatorKey,
+      initialRoute: '/login',
+      routes: {
+        '/login': (context) => const LoginScreen(),
+      },
     );
   }
 }
