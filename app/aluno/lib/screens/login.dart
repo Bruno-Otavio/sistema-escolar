@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:sistema_escolar_aluno/main.dart';
 import 'package:sistema_escolar_aluno/model/user.dart';
 import 'package:sistema_escolar_aluno/provider/user_provider.dart';
+import 'package:sistema_escolar_aluno/services/auth_service.dart';
 import 'package:sistema_escolar_aluno/services/user_service.dart';
 import 'package:sistema_escolar_aluno/widget/button.dart';
 import 'package:sistema_escolar_aluno/widget/text_input.dart';
@@ -23,26 +24,17 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _login() async {
     if (_formKey.currentState!.validate()) {
-      try {
-        User user = await UserService.login(
-          email: _emailController.text,
-          password: _passwordController.text,
-        );
-
-        Provider.of<UserProvider>(context, listen: false).user = user;
-
-        navigatorKey.currentState?.pushReplacementNamed('/home');
-      } catch (e) {
-        print(e);
-      }
+      final AuthService authService = AuthService();
+      await authService.signIn(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
     }
   }
 
   @override
   void initState() {
     super.initState();
-    _emailController.text = 'emanual@gmail.com';
-    _passwordController.text = '123456';
   }
 
   @override
