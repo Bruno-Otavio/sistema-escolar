@@ -1,23 +1,17 @@
 import 'dart:convert';
 
-import 'package:sistema_escolar_aluno/constants.dart';
-import 'package:sistema_escolar_aluno/model/user.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:sistema_escolar_aluno/model/user.dart' as app;
 import 'package:http/http.dart' as http;
 
 class UserService {
-  static Future<User> login({
-    required String email,
-    required String password,
-  }) async {
-    final response = await http.get(
-      Uri.parse('$apiUrl/professores?email=$email&password=$password'),
-    );
+  final CollectionReference professores =
+      FirebaseFirestore.instance.collection('professores');
 
-    if (response.statusCode == 200) {
-      final body = jsonDecode(response.body);
-      return User.fromJson(body[0] as Map<String, dynamic>);
-    } else {
-      throw Exception('Could not fetch teacher.');
-    }
+  Future<app.User> getCurrentUserInfo(String uid) async {
+    final userData = await professores.doc(uid).get();
+    return app.User.fromJson(userData.data() as Map<String, dynamic>);
   }
 }

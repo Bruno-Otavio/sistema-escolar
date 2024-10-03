@@ -1,8 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
+import 'package:sistema_escolar_aluno/model/user.dart' as model;
+import 'package:sistema_escolar_aluno/provider/user_provider.dart';
 import 'package:sistema_escolar_aluno/screens/home.dart';
 import 'package:sistema_escolar_aluno/screens/login.dart';
+import 'package:sistema_escolar_aluno/screens/register.dart';
+import 'package:sistema_escolar_aluno/services/user_service.dart';
 import 'package:sistema_escolar_aluno/theme/light_theme.dart';
 import 'firebase_options.dart';
 
@@ -13,7 +18,10 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MainApp());
+  runApp(ChangeNotifierProvider(
+    create: (context) => UserProvider(),
+    child: const MainApp(),
+  ));
 }
 
 class MainApp extends StatelessWidget {
@@ -46,6 +54,7 @@ class MainApp extends StatelessWidget {
       routes: {
         '/login': (context) => const LoginScreen(),
         '/home': (context) => const HomeScreen(),
+        '/register': (context) => const RegisterScreen(),
       },
     );
   }

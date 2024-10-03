@@ -1,10 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_escolar_aluno/main.dart';
 import 'package:sistema_escolar_aluno/model/turma.dart';
-import 'package:sistema_escolar_aluno/model/user.dart';
+import 'package:sistema_escolar_aluno/model/user.dart' as model;
 import 'package:sistema_escolar_aluno/provider/user_provider.dart';
 import 'package:sistema_escolar_aluno/services/turma_service.dart';
+import 'package:sistema_escolar_aluno/services/user_service.dart';
 import 'package:sistema_escolar_aluno/widget/action_button.dart';
 import 'package:sistema_escolar_aluno/widget/small_button.dart';
 import 'package:sistema_escolar_aluno/widget/text_input.dart';
@@ -18,7 +20,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  User? professor;
+  // model.User? professor;
 
   Future? _futureTurmas;
 
@@ -27,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _refresh() {
     setState(() {
-      _futureTurmas = TurmaService.getTurmas(professor!.id);
+      // _futureTurmas = TurmaService.getTurmas(professor!.id);
     });
   }
 
@@ -39,25 +41,40 @@ class _HomeScreenState extends State<HomeScreen> {
           controller1: _turmaController,
           controller2: _escolaController,
           action: () async {
-            try {
-              await TurmaService.addTurma(
-                nome: _turmaController.text,
-                escola: _escolaController.text,
-                professorId: professor!.id,
-              );
+            // try {
+            //   await TurmaService.addTurma(
+            //     nome: _turmaController.text,
+            //     escola: _escolaController.text,
+            //     professorId: professor!.id,
+            //   );
 
-              _turmaController.text = '';
-              _escolaController.text = '';
+            //   _turmaController.text = '';
+            //   _escolaController.text = '';
 
-              navigatorKey.currentState?.pop();
-              _refresh();
-            } catch (e) {
-              print(e);
-            }
+            //   navigatorKey.currentState?.pop();
+            //   _refresh();
+            // } catch (e) {
+            //   print(e);
+            // }
           },
         );
       },
     );
+  }
+
+  void _signOut() async {
+    await FirebaseAuth.instance.signOut().then(
+        (value) => navigatorKey.currentState?.pushReplacementNamed('/login'));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      if (user == null) {
+        navigatorKey.currentState?.pushReplacementNamed('/login');
+      }
+    });
   }
 
   @override
@@ -69,18 +86,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    professor = Provider.of<UserProvider>(context).user;
-    _futureTurmas = TurmaService.getTurmas(professor!.id);
+    // professor = Provider.of<UserProvider>(context).user;
+    // _futureTurmas = TurmaService.getTurmas(professor!.uid);
     return Scaffold(
       appBar: AppBar(
-        title: Text(professor!.nome),
+        title: Text('professor!.nome'),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
             child: GestureDetector(
-              onTap: () => navigatorKey.currentState?.pushReplacementNamed(
-                '/login',
-              ),
+              onTap: _signOut,
               child: Row(
                 children: [
                   Text(
