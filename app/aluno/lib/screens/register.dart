@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:sistema_escolar_aluno/main.dart';
+import 'package:sistema_escolar_aluno/services/auth_service.dart';
 import 'package:sistema_escolar_aluno/widget/button.dart';
+import 'package:sistema_escolar_aluno/widget/button_outlined.dart';
 import 'package:sistema_escolar_aluno/widget/text_input.dart';
 import 'package:sistema_escolar_aluno/widget/text_input_toggle.dart';
 
@@ -17,7 +20,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  void _register() {}
+  void _register() async {
+    await AuthService().signUp(
+      nome: _nameController.text,
+      email: _emailController.text,
+      password: _passwordController.text,
+    );
+  }
 
   @override
   void dispose() {
@@ -55,7 +64,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       return null;
                     },
                     controller: _nameController,
-                    hintText: 'Email',
+                    hintText: 'Nome',
                     margin: const EdgeInsets.symmetric(vertical: 5),
                   ),
                   TextInput(
@@ -82,7 +91,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   Button(
                     onPressed: _register,
-                    text: 'Entrar',
+                    text: 'Cadastrar',
+                    margin: const EdgeInsets.symmetric(vertical: 5),
+                  ),
+                  ButtonOutlined(
+                    onPressed: navigatorKey.currentState?.pop,
+                    text: 'Já possui uma conta?',
                     margin: const EdgeInsets.symmetric(vertical: 5),
                   ),
                 ],

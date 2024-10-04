@@ -7,6 +7,7 @@ import 'package:sistema_escolar_aluno/provider/user_provider.dart';
 import 'package:sistema_escolar_aluno/services/auth_service.dart';
 import 'package:sistema_escolar_aluno/services/user_service.dart';
 import 'package:sistema_escolar_aluno/widget/button.dart';
+import 'package:sistema_escolar_aluno/widget/button_outlined.dart';
 import 'package:sistema_escolar_aluno/widget/text_input.dart';
 import 'package:sistema_escolar_aluno/widget/text_input_toggle.dart';
 
@@ -94,6 +95,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   Button(
                     onPressed: _login,
                     text: 'Entrar',
+                    margin: const EdgeInsets.symmetric(vertical: 5),
+                  ),
+                  ButtonOutlined(
+                    onPressed: () => navigatorKey.currentState?.pushNamed('/register'),
+                    text: 'Cadastrar-se',
                     margin: const EdgeInsets.symmetric(vertical: 5),
                   ),
                 ],

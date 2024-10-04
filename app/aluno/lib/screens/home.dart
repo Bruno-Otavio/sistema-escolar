@@ -20,7 +20,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // model.User? professor;
+  User currentUser = FirebaseAuth.instance.currentUser!;
 
   Future? _futureTurmas;
 
@@ -90,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // _futureTurmas = TurmaService.getTurmas(professor!.uid);
     return Scaffold(
       appBar: AppBar(
-        title: Text('professor!.nome'),
+        title: Text(currentUser.displayName!),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),

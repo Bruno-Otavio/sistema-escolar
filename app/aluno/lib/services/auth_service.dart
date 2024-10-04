@@ -4,14 +4,18 @@ import 'package:sistema_escolar_aluno/main.dart';
 
 class AuthService {
   Future<void> signUp({
+    required String nome,
     required String email,
     required String password,
   }) async {
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+
+      userCredential.user!.updateDisplayName(nome);
 
       navigatorKey.currentState?.pushReplacementNamed('/login');
     } on FirebaseAuthException catch (e) {
