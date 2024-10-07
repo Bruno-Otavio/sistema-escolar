@@ -1,42 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:sistema_escolar_aluno/main.dart';
-import 'package:sistema_escolar_aluno/services/auth_service.dart';
-import 'package:sistema_escolar_aluno/widget/button.dart';
-import 'package:sistema_escolar_aluno/widget/button_outlined.dart';
-import 'package:sistema_escolar_aluno/widget/text_input.dart';
-import 'package:sistema_escolar_aluno/widget/text_input_toggle.dart';
+import 'package:sistema_escolar/main.dart';
+import 'package:sistema_escolar/services/auth_service.dart';
+import 'package:sistema_escolar/widget/button.dart';
+import 'package:sistema_escolar/widget/button_outlined.dart';
+import 'package:sistema_escolar/widget/text_input.dart';
+import 'package:sistema_escolar/widget/text_input_toggle.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
 
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  void _login() async {
-    if (_formKey.currentState!.validate()) {
-      final AuthService authService = AuthService();
-      await authService.signIn(
-        email: _emailController.text,
-        password: _passwordController.text,
-      );
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
+  void _register() async {
+    await AuthService().signUp(
+      nome: _nameController.text,
+      email: _emailController.text,
+      password: _passwordController.text,
+    );
   }
 
   @override
   void dispose() {
     super.dispose();
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
   }
@@ -54,13 +49,24 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               Center(
                 child: Text(
-                  'Bem Vindo',
+                  'Cadastre-se',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
               const SizedBox(height: 50),
               Column(
                 children: [
+                  TextInput(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor, insira seu nome.';
+                      }
+                      return null;
+                    },
+                    controller: _nameController,
+                    hintText: 'Nome',
+                    margin: const EdgeInsets.symmetric(vertical: 5),
+                  ),
                   TextInput(
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -84,13 +90,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     margin: const EdgeInsets.symmetric(vertical: 5),
                   ),
                   Button(
-                    onPressed: _login,
-                    text: 'Entrar',
+                    onPressed: _register,
+                    text: 'Cadastrar',
                     margin: const EdgeInsets.symmetric(vertical: 5),
                   ),
                   ButtonOutlined(
-                    onPressed: () => navigatorKey.currentState?.pushNamed('/register'),
-                    text: 'Cadastrar-se',
+                    onPressed: navigatorKey.currentState?.pop,
+                    text: 'Já possui uma conta?',
                     margin: const EdgeInsets.symmetric(vertical: 5),
                   ),
                 ],

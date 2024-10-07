@@ -1,22 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_escolar_aluno/main.dart';
 import 'package:sistema_escolar_aluno/model/activity.dart';
-import 'package:sistema_escolar_aluno/services/activity_service.dart';
-import 'package:sistema_escolar_aluno/widget/confirmation_modal.dart';
 import 'package:sistema_escolar_aluno/widget/small_button.dart';
 import 'package:sistema_escolar_aluno/widget/text_input.dart';
 
 class ActitvityWidget extends StatelessWidget {
-  ActitvityWidget({
+  const ActitvityWidget({
     super.key,
     required this.activity,
-    required this.refresh,
   });
 
   final Activity activity;
-  final Function() refresh;
-
-  final TextEditingController _editingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -41,9 +35,9 @@ class ActitvityWidget extends StatelessWidget {
         ],
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
+            margin: const EdgeInsets.only(right: 10),
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.tertiary,
@@ -76,85 +70,6 @@ class ActitvityWidget extends StatelessWidget {
                 ],
               ),
             ),
-          ),
-          PopupMenuButton(
-            onSelected: (value) {
-              switch (value) {
-                case 'edit':
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return EditActitivtyModal(
-                        action: () async {
-                          try {
-                            await ActivityService.updateActivity(
-                              descricao: _editingController.text,
-                              id: activity.id,
-                            );
-                            navigatorKey.currentState?.pop();
-                            refresh();
-                          } catch (e) {
-                            print(e);
-                          }
-                        },
-                        controller: _editingController,
-                      );
-                    },
-                  );
-                  break;
-                case 'delete':
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return ConfirmationModal(action: () async {
-                        try {
-                          await ActivityService.removeActivity(activity.id);
-                          navigatorKey.currentState?.pop();
-                          refresh();
-                        } catch (e) {
-                          print(e);
-                        }
-                      });
-                    },
-                  );
-                  break;
-              }
-            },
-            itemBuilder: (context) {
-              return [
-                PopupMenuItem(
-                  value: 'edit',
-                  child: Text(
-                    'Editar',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                ),
-                PopupMenuItem(
-                  value: 'delete',
-                  child: Text(
-                    'Excluir',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Theme.of(context).colorScheme.tertiary,
-                    ),
-                  ),
-                ),
-              ];
-            },
-            iconColor: Theme.of(context).colorScheme.primary,
-            menuPadding: EdgeInsets.zero,
-            padding: EdgeInsets.zero,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            shadowColor:
-                Theme.of(context).colorScheme.secondary.withOpacity(0.5),
-            splashRadius: 4,
           ),
         ],
       ),

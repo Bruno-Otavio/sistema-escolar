@@ -1,10 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:sistema_escolar/main.dart';
 import 'package:sistema_escolar/model/activity.dart';
 import 'package:sistema_escolar/model/turma.dart';
-import 'package:sistema_escolar/model/user.dart';
-import 'package:sistema_escolar/provider/user_provider.dart';
 import 'package:sistema_escolar/services/activity_service.dart';
 import 'package:sistema_escolar/widget/action_button.dart';
 import 'package:sistema_escolar/widget/activity_widget.dart';
@@ -24,17 +23,11 @@ class ActivitiesScreen extends StatefulWidget {
 }
 
 class _ActivitiesScreenState extends State<ActivitiesScreen> {
-  User? professor;
+  final User _currentUser = FirebaseAuth.instance.currentUser!;
 
-  late Future _futureActivities;
+  final ActivityService _activityService = ActivityService();
 
   final TextEditingController _newActivityController = TextEditingController();
-
-  void _refresh() {
-    setState(() {
-      _futureActivities = ActivityService.getActivities(widget.turma.id);
-    });
-  }
 
   void _addActivity() {
     showDialog(
@@ -42,16 +35,15 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
       builder: (context) {
         return AddActitivtyModal(
           controller: _newActivityController,
-          action: () async {
-            try {
-              await ActivityService.addActivity(
-                  descricao: _newActivityController.text,
-                  turmaId: widget.turma.id);
-              navigatorKey.currentState?.pop();
-              _refresh();
-            } catch (e) {
-              print(e);
-            }
+          action: () {
+            _activityService.addActivity(
+              descricao: _newActivityController.text,
+              turmaId: widget.turma.id,
+            );
+
+            _newActivityController.text = '';
+
+            navigatorKey.currentState?.pop();
           },
         );
       },
@@ -60,11 +52,9 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    professor = Provider.of<UserProvider>(context).user;
-    _futureActivities = ActivityService.getActivities(widget.turma.id);
     return Scaffold(
       appBar: AppBar(
-        title: Text(professor!.nome),
+        title: Text(_currentUser.displayName!),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
@@ -99,29 +89,31 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
         child: Column(
           children: [
             Expanded(
-              child: FutureBuilder(
-                future: _futureActivities,
+              child: StreamBuilder(
+                stream: _activityService.getActivities(widget.turma.id),
                 builder: (context, snapshot) {
-                  if (snapshot.connectionState != ConnectionState.done) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  if (snapshot.hasError) {
-                    return Text('${snapshot.error}');
-                  } else {
-                    final data = snapshot.data!;
+                  if (snapshot.hasData) {
+                    final List activitiesList = snapshot.data!.docs;
                     return ListView.builder(
-                      itemCount: data.length,
+                      itemCount: activitiesList.length,
                       itemBuilder: (context, index) {
-                        final Activity activity = data[index];
-                        return ActitvityWidget(
-                          activity: activity,
-                          refresh: _refresh,
-                        );
+                        DocumentSnapshot document = activitiesList[index];
+                        String docId = document.id;
+
+                        Map<String, dynamic> data =
+                            document.data() as Map<String, dynamic>;
+                        data.addAll({'id': docId});
+                        Activity activity = Activity.fromJson(data);
+
+                        return ActitvityWidget(activity: activity);
                       },
                     );
+                  } else if (snapshot.hasError) {
+                    return Text('${snapshot.error}');
                   }
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
                 },
               ),
             ),

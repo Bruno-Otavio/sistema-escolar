@@ -7,14 +7,13 @@ import 'package:sistema_escolar/widget/confirmation_modal.dart';
 import 'package:sistema_escolar/widget/small_button.dart';
 
 class TurmaWidget extends StatelessWidget {
-  const TurmaWidget({
+  TurmaWidget({
     super.key,
     required this.turma,
-    required this.refresh,
   });
 
   final Turma turma;
-  final Function()? refresh;
+  final TurmaService _turmeService = TurmaService();
 
   void _openActivities() {
     navigatorKey.currentState?.push(
@@ -29,9 +28,8 @@ class TurmaWidget extends StatelessWidget {
         return ConfirmationModal(
           action: () async {
             try {
-              await TurmaService.removeTurma(turma.id);
+              await _turmeService.removeTurma(turma.id);
               navigatorKey.currentState?.pop();
-              refresh!();
             } catch (e) {
               showDialog(
                 context: context,

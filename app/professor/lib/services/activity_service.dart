@@ -1,70 +1,32 @@
-import 'dart:convert';
-
-import 'package:sistema_escolar/constants.dart';
-import 'package:sistema_escolar/model/activity.dart';
-import 'package:http/http.dart' as http;
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ActivityService {
-  static Future<List<Activity>> getActivities(String turmaId) async {
-    final response =
-        await http.get(Uri.parse('$apiUrl/atividades?turmaId=$turmaId'));
+  final activitites = FirebaseFirestore.instance.collection('atividades');
 
-    if (response.statusCode == 200) {
-      final List body = jsonDecode(response.body);
-      return body.map((e) => Activity.fromJson(e)).toList();
-    } else {
-      throw Exception('Could not fetch activities.');
-    }
+  Stream<QuerySnapshot<Map<String, dynamic>>> getActivities(String turmaId) {
+    return activitites.where('turmaId', isEqualTo: turmaId).snapshots();
   }
 
-  static Future<void> addActivity({
+  Future<void> addActivity({
     required String descricao,
     required String turmaId,
-  }) async {
-    final Map<String, dynamic> data = {
+  }) {
+    Map<String, dynamic> data = {
       'descricao': descricao,
       'turmaId': turmaId,
+      'timeStamp': Timestamp.now(),
     };
-
-    final response = await http.post(
-      Uri.parse('$apiUrl/atividades'),
-      headers: {
-        'content-type': 'application/json',
-      },
-      body: jsonEncode(data),
-    );
-
-    if (response.statusCode != 201) {
-      throw Exception('Could not add activity.');
-    }
+    return activitites.add(data);
   }
 
-  static Future<void> updateActivity({
+  Future<void> updateActivity({
     required String descricao,
     required String id,
-  }) async {
-    final Map<String, dynamic> data = {
-      'descricao': descricao,
-    };
-
-    final response = await http.patch(
-      Uri.parse('$apiUrl/atividades/$id'),
-      headers: {
-        'content-type': 'application/json',
-      },
-      body: jsonEncode(data),
-    );
-
-    if (response.statusCode != 200) {
-      throw Exception('Could not update activity.');
-    }
+  }) {
+    return activitites.doc(id).update({'descricao': descricao});
   }
 
-  static Future<void> removeActivity(String id) async {
-    final response = await http.delete(Uri.parse('$apiUrl/atividades/$id'));
-
-    if (response.statusCode != 200) {
-      throw Exception('Could not delete activity.');
-    }
+  Future<void> removeActivity(String id) {
+    return activitites.doc(id).delete(); 
   }
 }

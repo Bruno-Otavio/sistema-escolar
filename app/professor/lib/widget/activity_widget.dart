@@ -10,11 +10,10 @@ class ActitvityWidget extends StatelessWidget {
   ActitvityWidget({
     super.key,
     required this.activity,
-    required this.refresh,
   });
 
   final Activity activity;
-  final Function() refresh;
+  final ActivityService _activityService = ActivityService();
 
   final TextEditingController _editingController = TextEditingController();
 
@@ -70,7 +69,7 @@ class ActitvityWidget extends StatelessWidget {
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    '19 de Janeiro',
+                    '${activity.timeStamp.toDate().day.toString().padLeft(2, '0')}/${activity.timeStamp.toDate().month.toString().padLeft(2, '0')}/${activity.timeStamp.toDate().year}',
                     style: Theme.of(context).textTheme.headlineSmall,
                   ),
                 ],
@@ -87,12 +86,11 @@ class ActitvityWidget extends StatelessWidget {
                       return EditActitivtyModal(
                         action: () async {
                           try {
-                            await ActivityService.updateActivity(
+                            _activityService.updateActivity(
                               descricao: _editingController.text,
                               id: activity.id,
                             );
                             navigatorKey.currentState?.pop();
-                            refresh();
                           } catch (e) {
                             print(e);
                           }
@@ -108,9 +106,8 @@ class ActitvityWidget extends StatelessWidget {
                     builder: (context) {
                       return ConfirmationModal(action: () async {
                         try {
-                          await ActivityService.removeActivity(activity.id);
+                          _activityService.removeActivity(activity.id);
                           navigatorKey.currentState?.pop();
-                          refresh();
                         } catch (e) {
                           print(e);
                         }

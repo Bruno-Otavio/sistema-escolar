@@ -1,20 +1,14 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sistema_escolar_aluno/constants.dart';
-import 'package:sistema_escolar_aluno/model/activity.dart';
 import 'package:http/http.dart' as http;
 
 class ActivityService {
-  static Future<List<Activity>> getActivities(String turmaId) async {
-    final response =
-        await http.get(Uri.parse('$apiUrl/atividades?turmaId=$turmaId'));
+  final activitites = FirebaseFirestore.instance.collection('atividades');
 
-    if (response.statusCode == 200) {
-      final List body = jsonDecode(response.body);
-      return body.map((e) => Activity.fromJson(e)).toList();
-    } else {
-      throw Exception('Could not fetch activities.');
-    }
+  Stream<QuerySnapshot<Map<String, dynamic>>> getActivities(String turmaId) {
+    return activitites.where('turmaId', isEqualTo: turmaId).snapshots();
   }
 
   static Future<void> addActivity({

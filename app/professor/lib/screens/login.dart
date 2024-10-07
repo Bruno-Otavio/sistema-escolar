@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:sistema_escolar/main.dart';
-import 'package:sistema_escolar/model/user.dart';
-import 'package:sistema_escolar/provider/user_provider.dart';
-import 'package:sistema_escolar/services/user_service.dart';
+import 'package:sistema_escolar/services/auth_service.dart';
 import 'package:sistema_escolar/widget/button.dart';
 import 'package:sistema_escolar/widget/text_input.dart';
 import 'package:sistema_escolar/widget/text_input_toggle.dart';
@@ -23,26 +19,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _login() async {
     if (_formKey.currentState!.validate()) {
-      try {
-        User user = await UserService.login(
-          email: _emailController.text,
-          password: _passwordController.text,
-        );
-
-        Provider.of<UserProvider>(context, listen: false).user = user;
-
-        navigatorKey.currentState?.pushReplacementNamed('/home');
-      } catch (e) {
-        print(e);
-      }
+      final AuthService authService = AuthService();
+      await authService.signIn(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _emailController.text = 'emanual@gmail.com';
-    _passwordController.text = '123456';
   }
 
   @override

@@ -19,14 +19,10 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   User currentUser = FirebaseAuth.instance.currentUser!;
 
+  final TurmaService _turmaService = TurmaService();
+
   final TextEditingController _turmaController = TextEditingController();
   final TextEditingController _escolaController = TextEditingController();
-
-  void _refresh() {
-    setState(() {
-      // _futureTurmas = TurmaService.getTurmas(professor!.id);
-    });
-  }
 
   void _addTurma() {
     showDialog(
@@ -35,22 +31,21 @@ class _HomeScreenState extends State<HomeScreen> {
         return AddTurmaModal(
           controller1: _turmaController,
           controller2: _escolaController,
-          action: () async {
-            // try {
-            //   await TurmaService.addTurma(
-            //     nome: _turmaController.text,
-            //     escola: _escolaController.text,
-            //     professorId: professor!.id,
-            //   );
+          action: () {
+            try {
+              _turmaService.addTurma(
+                nome: _turmaController.text,
+                escola: _escolaController.text,
+                professorId: currentUser.uid,
+              );
 
-            //   _turmaController.text = '';
-            //   _escolaController.text = '';
+              _turmaController.text = '';
+              _escolaController.text = '';
 
-            //   navigatorKey.currentState?.pop();
-            //   _refresh();
-            // } catch (e) {
-            //   print(e);
-            // }
+              navigatorKey.currentState?.pop();
+            } catch (e) {
+              print(e);
+            }
           },
         );
       },
@@ -116,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Padding(
         padding: const EdgeInsets.all(15),
         child: StreamBuilder<QuerySnapshot>(
-          stream: TurmaService.getTurmas(currentUser.uid),
+          stream: _turmaService.getTurmas(currentUser.uid),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               List turmasList = snapshot.data!.docs;
