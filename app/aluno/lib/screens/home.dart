@@ -1,12 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:sistema_escolar_aluno/main.dart';
 import 'package:sistema_escolar_aluno/model/turma.dart';
-import 'package:sistema_escolar_aluno/model/user.dart' as model;
-import 'package:sistema_escolar_aluno/provider/user_provider.dart';
 import 'package:sistema_escolar_aluno/services/turma_service.dart';
-import 'package:sistema_escolar_aluno/services/user_service.dart';
 import 'package:sistema_escolar_aluno/widget/action_button.dart';
 import 'package:sistema_escolar_aluno/widget/small_button.dart';
 import 'package:sistema_escolar_aluno/widget/text_input.dart';
@@ -21,8 +18,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   User currentUser = FirebaseAuth.instance.currentUser!;
-
-  Future? _futureTurmas;
 
   final TextEditingController _turmaController = TextEditingController();
   final TextEditingController _escolaController = TextEditingController();
@@ -120,26 +115,30 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(15),
-        child: FutureBuilder(
-          future: _futureTurmas,
+        child: StreamBuilder<QuerySnapshot>(
+          stream: TurmaService.getTurmas(currentUser.uid),
           builder: (context, snapshot) {
-            if (snapshot.connectionState != ConnectionState.done) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            if (snapshot.hasError) {
-              return Text('${snapshot.error}');
-            } else {
-              final List data = snapshot.data!;
+            if (snapshot.hasData) {
+              List turmasList = snapshot.data!.docs;
               return ListView.builder(
-                itemCount: data.length,
-                itemBuilder: (context, index) {
-                  final Turma turma = data[index];
-                  return TurmaWidget(turma: turma, refresh: _refresh);
+                itemCount: turmasList.length,
+                itemBuilder: (contet, index) {
+                  DocumentSnapshot document = turmasList[index];
+                  String docId = document.id;
+
+                  Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+                  data.addAll({'id': docId});
+                  Turma turma = Turma.fromJson(data);
+
+                  return TurmaWidget(turma: turma);
                 },
               );
+            } else if (snapshot.hasError) {
+              return Text('${snapshot.error}');
             }
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           },
         ),
       ),

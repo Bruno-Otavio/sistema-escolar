@@ -31,10 +31,6 @@ class _LoginScreenState extends State<LoginScreen> {
         email: _emailController.text,
         password: _passwordController.text,
       );
-
-      User currentUser = FirebaseAuth.instance.currentUser!;
-      model.User user = await UserService().getCurrentUserInfo(currentUser.uid);
-      Provider.of<UserProvider>(context).user = user;
     }
   }
 

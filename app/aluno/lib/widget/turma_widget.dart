@@ -10,11 +10,9 @@ class TurmaWidget extends StatelessWidget {
   const TurmaWidget({
     super.key,
     required this.turma,
-    required this.refresh,
   });
 
   final Turma turma;
-  final Function()? refresh;
 
   void _openActivities() {
     navigatorKey.currentState?.push(
@@ -31,7 +29,6 @@ class TurmaWidget extends StatelessWidget {
             try {
               await TurmaService.removeTurma(turma.id);
               navigatorKey.currentState?.pop();
-              refresh!();
             } catch (e) {
               showDialog(
                 context: context,

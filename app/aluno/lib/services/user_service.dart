@@ -12,6 +12,7 @@ class UserService {
 
   Future<app.User> getCurrentUserInfo(String uid) async {
     final userData = await professores.doc(uid).get();
-    return app.User.fromJson(userData.data() as Map<String, dynamic>);
+    final data = userData.data();
+    return app.User.fromJson(data as Map<String, dynamic>);
   }
 }
