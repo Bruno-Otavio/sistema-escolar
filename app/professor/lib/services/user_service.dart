@@ -1,23 +1,14 @@
-import 'dart:convert';
-
-import 'package:sistema_escolar/constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sistema_escolar/model/user.dart';
-import 'package:http/http.dart' as http;
 
 class UserService {
-  static Future<User> login({
-    required String email,
-    required String password,
-  }) async {
-    final response = await http.get(
-      Uri.parse('$apiUrl/professores?email=$email&password=$password'),
-    );
+  final _users = FirebaseFirestore.instance.collection('users');
 
-    if (response.statusCode == 200) {
-      final body = jsonDecode(response.body);
-      return User.fromJson(body[0] as Map<String, dynamic>);
-    } else {
-      throw Exception('Could not fetch teacher.');
-    }
+  Future<CustomUser> getUser({required String uid}) async {
+    final user = await _users.doc(uid).get();
+    final data = user.data()!;
+    data.addAll({'id': FirebaseAuth.instance.currentUser!.uid});
+    return CustomUser.fromJson(data);
   }
 }

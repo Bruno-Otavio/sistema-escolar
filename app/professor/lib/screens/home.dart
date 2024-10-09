@@ -1,9 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sistema_escolar/main.dart';
 import 'package:sistema_escolar/model/turma.dart';
+import 'package:sistema_escolar/model/user.dart';
+import 'package:sistema_escolar/provider/user_provider.dart';
 import 'package:sistema_escolar/services/turma_service.dart';
+import 'package:sistema_escolar/services/user_service.dart';
 import 'package:sistema_escolar/widget/action_button.dart';
 import 'package:sistema_escolar/widget/small_button.dart';
 import 'package:sistema_escolar/widget/text_input.dart';
@@ -57,12 +61,19 @@ class _HomeScreenState extends State<HomeScreen> {
         (value) => navigatorKey.currentState?.pushReplacementNamed('/login'));
   }
 
+  void _getUser(String uid) async {
+    final user = await UserService().getUser(uid: uid);
+    Provider.of<UserProvider>(context, listen: false).user = user;
+  }
+
   @override
   void initState() {
     super.initState();
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      if (user == null) {
-        navigatorKey.currentState?.pushReplacementNamed('/login');
+      if (user != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _getUser(user.uid);
+        });
       }
     });
   }

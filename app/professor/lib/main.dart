@@ -1,9 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
+import 'package:sistema_escolar/provider/user_provider.dart';
 import 'package:sistema_escolar/screens/home.dart';
 import 'package:sistema_escolar/screens/login.dart';
 import 'package:sistema_escolar/screens/register.dart';
+import 'package:sistema_escolar/services/firebase_messaging_service.dart';
 import 'package:sistema_escolar/theme/light_theme.dart';
 import 'firebase_options.dart';
 
@@ -12,7 +15,11 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MainApp());
+  await FirebaseMessagingService().initNotifications();
+  runApp(ChangeNotifierProvider(
+    create: (context) => UserProvider(),
+    child: const MainApp(),
+  ));
 }
 
 final navigatorKey = GlobalKey<NavigatorState>();
