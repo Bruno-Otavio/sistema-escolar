@@ -6,6 +6,7 @@ import 'package:sistema_escolar/main.dart';
 import 'package:sistema_escolar/model/turma.dart';
 import 'package:sistema_escolar/model/user.dart';
 import 'package:sistema_escolar/provider/user_provider.dart';
+import 'package:sistema_escolar/services/firebase_messaging_service.dart';
 import 'package:sistema_escolar/services/turma_service.dart';
 import 'package:sistema_escolar/services/user_service.dart';
 import 'package:sistema_escolar/widget/action_button.dart';
@@ -225,6 +226,7 @@ class AddTurmaModal extends StatelessWidget {
         SmallButton(
           onPressed: () {
             navigatorKey.currentState?.pop();
+            FirebaseMessagingService().sendPushMessage();
             controller1.text = '';
             controller2.text = '';
           },
